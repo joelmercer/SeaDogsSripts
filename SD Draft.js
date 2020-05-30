@@ -15,7 +15,7 @@ var teamCode = JSON.parse('{"8":"snb","1":"mon","5":"hal","3":"cap","2":"bat","1
 var allTeamPicks = new Array();
 var teamTranscations = new Array();
 var teams = ["snb","mon","hal","cap","bat","vic","cha","blb","que","sha","chi","bac","rou","vdo","dru","rim","she","gat"];
-var years = ["year-2019", "year-2020", "year-2021"];
+var years = ["year-2020", "year-2021", "year-2022"];
 
 for(var team of teams) {
 	allTeamPicks[team] = [];
@@ -63,6 +63,22 @@ var req = new Request(url);
 var json = await req.loadJSON();
 allTranscations.push(json["SiteKit"]["Transactions"]);
 
+var url = "http://lscluster.hockeytech.com/feed/?feed=modulekit&view=transactions&key=f322673b6bcae299&fmt=json&client_code=lhjmq&lang=en&season_id=191&fmt=json";
+var req = new Request(url);
+var json = await req.loadJSON();
+allTranscations.push(json["SiteKit"]["Transactions"]);
+
+var url = "http://lscluster.hockeytech.com/feed/?feed=modulekit&view=transactions&key=f322673b6bcae299&fmt=json&client_code=lhjmq&lang=en&season_id=192&fmt=json";
+var req = new Request(url);
+var json = await req.loadJSON();
+allTranscations.push(json["SiteKit"]["Transactions"]);
+
+var url = "http://lscluster.hockeytech.com/feed/?feed=modulekit&view=transactions&key=f322673b6bcae299&fmt=json&client_code=lhjmq&lang=en&season_id=193&fmt=json";
+var req = new Request(url);
+var json = await req.loadJSON();
+allTranscations.push(json["SiteKit"]["Transactions"]);
+
+
 for(var transactions of allTranscations) {
 	for(var transcation of transactions) {
 
@@ -79,11 +95,17 @@ for(var transactions of allTranscations) {
 				var fromTeam = teamCode[team1];
 				var year = "year-" + pick["draft_year"];
 				var round = "round-" + pick["draft_round"];
+
+				if(orginalTeam != pick["team_id"]) {
+					orginalTeam
+				}
 				
-				if(parseInt(pick["draft_year"]) >= 2019) {
+				if(parseInt(pick["draft_year"]) >= 2020) {
+					allTeamPicks[fromTeam][year][round][orginalTeam] = null;
 					allTeamPicks[orginalTeam][year][round][orginalTeam] = null;
 					allTeamPicks[toTeam][year][round][orginalTeam] = teamCode[team1];
 					teamTranscations[toTeam][year][round][fromTeam] = transcation["id"];
+					teamTranscations[fromTeam][year][round][orginalTeam] = null;
 				}		
 
 			} else {
@@ -98,10 +120,12 @@ for(var transactions of allTranscations) {
 				var year = "year-" + pick["draft_year"];
 				var round = "round-" + pick["draft_round"];
 
-				if(parseInt(pick["draft_year"]) >= 2019) {
+				if(parseInt(pick["draft_year"]) >= 2020) {
+					allTeamPicks[fromTeam][year][round][orginalTeam] = null;
 					allTeamPicks[orginalTeam][year][round][orginalTeam] = null;
 					allTeamPicks[toTeam][year][round][orginalTeam] = teamCode[team2];
 					teamTranscations[toTeam][year][round][fromTeam] = transcation["id"];
+					teamTranscations[fromTeam][year][round][orginalTeam] = null;
 				}
 			}
 		}
